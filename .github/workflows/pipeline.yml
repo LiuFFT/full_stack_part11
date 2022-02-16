@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - master
+  pull_request:
+    branches: [ master ]
+    types: [ opened, synchronize ]
 
 jobs:
   simple_deployment_pipeline:
@@ -13,5 +16,27 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: '12.x'
-      - name: npm install
+      - name: npm install backend
         run: npm install
+      - name: npm install client
+        run: cd client && npm install
+      - name: lint
+        run: npm run lint
+      - name: build
+        run: npm run build:client
+      - name: heroku deploy
+        if: ${{ github.event_name == 'push' && !contains(github.event.commits.*.message, '#skip') }}
+        uses: akhileshns/heroku-deploy@master
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: "fullstack-11-ci-21"
+          heroku_email: "liufft98@gmail.com"
+          healthcheck: "https://fullstack-11-ci-21.herokuapp.com/health"
+          checkstring: "ok"
+          rollbackonhealthcheckfailed: true
+      - uses: actions/checkout@v2
+      - name: Bump version and push tag
+        if: ${{ github.event_name == 'push' && !contains(github.event.commits.*.message, '#skip') }}
+        uses: anothrNick/github-tag-action@eca2b69f9e2c24be7decccd0f15fdb1ea5906598
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -7,7 +7,8 @@
     "start": "node index.js",
     "dev": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "build:client": "rm -rf build && cd client && npm run build --prod && cp -r build ../"
   },
   "author": "lzk",
   "license": "MIT",
@@ -17,7 +18,8 @@
     "express": "^4.17.1",
     "mongoose": "^5.11.8",
     "mongoose-unique-validator": "^2.0.3",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "typescript": "^4.5.5"
   },
   "devDependencies": {
     "eslint": "^7.16.0",
