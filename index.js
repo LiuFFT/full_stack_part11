@@ -16,6 +16,9 @@ morgan.token('json', function (req) { return JSON.stringify(req.body)})
 // app.use(morgan('tiny'))
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :json'))
 
+app.get('/health', (req, res) => {
+  res.send('ok')
+})
 
 //cors
 const cors = require('cors')
