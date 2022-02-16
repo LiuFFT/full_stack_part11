@@ -13,5 +13,16 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: '12.x'
-      - name: npm install
+      - name: npm install backend
         run: npm install
+      - name: npm install client
+        run: cd client && npm install
+      - name: lint
+        run: npm run lint
+      - name: build
+        run: npm run build:client
+      - name: Bump version and push tag
+        if: ${{ github.event_name == 'push' }}
+        uses: anothrNick/github-tag-action@eca2b69f9e2c24be7decccd0f15fdb1ea5906598
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
